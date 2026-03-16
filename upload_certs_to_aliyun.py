@@ -29,7 +29,7 @@ def upload_certificate(client, domain_name, cert_path, key_path):
     with open(expanded_key_path, 'r') as f:
         key = f.read()
 
-    request = SetDcdnDomainSSLCertificateRequest()
+    request = SetDcdnDomainSSLCertificateRequest.SetDcdnDomainSSLCertificateRequest()
     # DCDN加速域名
     request.set_DomainName(domain_name)
     # 证书名称
