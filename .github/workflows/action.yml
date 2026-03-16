@@ -52,14 +52,14 @@ jobs:
     - name: Install Python dependencies
       run: pip install -r requirements.txt
 
-    - name: Upload certificates to Alibaba Cloud CDN
+    - name: Upload certificates to Alibaba Cloud DCDN
       env:
         ALIYUN_ACCESS_KEY_ID: ${{ secrets.ALIYUN_ACCESS_KEY_ID }}
         ALIYUN_ACCESS_KEY_SECRET: ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
         # 要设置域名的二级域名，例如要设置*.example.com，这里填写的就是example.com, 多个域名用英文逗号隔开
         DOMAINS: ${{ secrets.DOMAINS }}
-        # 设置阿里云cdn域名，一般是三级域名，例如cdn.example.com，需要跟上面的DOMAINS对应，否则会设置错误
-        ALIYUN_CDN_DOMAINS: ${{ secrets.ALIYUN_CDN_DOMAINS }}
+        # 设置阿里云dcdn域名，一般是三级域名，例如dcdn.example.com，需要跟上面的DOMAINS对应，否则会设置错误
+        ALIYUN_DCDN_DOMAINS: ${{ secrets.ALIYUN_DCDN_DOMAINS }}
   
       run: python upload_certs_to_aliyun.py
 

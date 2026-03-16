@@ -1,7 +1,8 @@
 import datetime
 import os
 from aliyunsdkcore.client import AcsClient
-from aliyunsdkcdn.request.v20180510 import SetCdnDomainSSLCertificateRequest
+from aliyunsdkdcdn.request.v20180115 import SetDcdnDomainSSLCertificateRequest
+
 
 def get_env_var(key):
     value = os.getenv(key)
@@ -9,9 +10,11 @@ def get_env_var(key):
         raise EnvironmentError(f"Environment variable {key} not set")
     return value
 
+
 def file_exists_and_not_empty(file_path):
     expanded_path = os.path.expanduser(file_path)
     return os.path.isfile(expanded_path) and os.path.getsize(expanded_path) > 0
+
 
 def upload_certificate(client, domain_name, cert_path, key_path):
     expanded_cert_path = os.path.expanduser(cert_path)
@@ -26,8 +29,8 @@ def upload_certificate(client, domain_name, cert_path, key_path):
     with open(expanded_key_path, 'r') as f:
         key = f.read()
 
-    request = SetCdnDomainSSLCertificateRequest.SetCdnDomainSSLCertificateRequest()
-    # CDN加速域名
+    request = SetDcdnDomainSSLCertificateRequest()
+    # DCDN加速域名
     request.set_DomainName(domain_name)
     # 证书名称
     request.set_CertName(domain_name + datetime.datetime.now().strftime("%Y%m%d"))
@@ -40,18 +43,20 @@ def upload_certificate(client, domain_name, cert_path, key_path):
     response = client.do_action_with_exception(request)
     print(str(response, encoding='utf-8'))
 
+
 def main():
     access_key_id = get_env_var('ALIYUN_ACCESS_KEY_ID')
     access_key_secret = get_env_var('ALIYUN_ACCESS_KEY_SECRET')
     domains = get_env_var('DOMAINS').split(',')
-    cdn_domains = get_env_var('ALIYUN_CDN_DOMAINS').split(',')
-
+    dcdn_domains = get_env_var('ALIYUN_DCDN_DOMAINS').split(',')
+    
     client = AcsClient(access_key_id, access_key_secret, 'cn-hangzhou')
-
-    for domain, cdn_domain in zip(domains, cdn_domains):
+    
+    # 处理DCDN域名
+    for domain, dcdn_domain in zip(domains, dcdn_domains):
         cert_path = f'~/certs/{domain}/fullchain.pem'
         key_path = f'~/certs/{domain}/privkey.pem'
-        upload_certificate(client, cdn_domain, cert_path, key_path)
+        upload_certificate(client, dcdn_domain, cert_path, key_path)
 
 if __name__ == "__main__":
     main()
