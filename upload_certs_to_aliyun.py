@@ -48,14 +48,15 @@ def main():
     access_key_secret = get_env_var('ALIYUN_ACCESS_KEY_SECRET')
     domains = get_env_var('DOMAINS').split(',')
     dcdn_domains = get_env_var('ALIYUN_DCDN_DOMAINS').split(',')
-    
+
     client = AcsClient(access_key_id, access_key_secret, 'cn-hangzhou')
-    
-    # 处理DCDN域名
-    for domain, dcdn_domain in zip(domains, dcdn_domains):
+
+    for domain in domains:
         cert_path = f'~/certs/{domain}/fullchain.pem'
         key_path = f'~/certs/{domain}/privkey.pem'
-        upload_certificate(client, dcdn_domain, cert_path, key_path)
+        # 一个泛域名证书可以绑定到多个 DCDN 子域名
+        for dcdn_domain in dcdn_domains:
+            upload_certificate(client, dcdn_domain.strip(), cert_path, key_path)
 
 if __name__ == "__main__":
     main()
