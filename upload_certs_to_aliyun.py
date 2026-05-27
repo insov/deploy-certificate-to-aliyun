@@ -3,7 +3,6 @@ import os
 from aliyunsdkcore.client import AcsClient
 from aliyunsdkdcdn.request.v20180115 import SetDcdnDomainSSLCertificateRequest
 
-
 def get_env_var(key):
     value = os.getenv(key)
     if not value:
